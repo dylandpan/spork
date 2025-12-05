@@ -1,0 +1,8 @@
+metric,fork_shell,spork_shell,improvement_percent
+total_runs,100,100,0
+total_time_us,5622118,5781119,2.00
+exec_time_us,1034326,1020687,1.00
+avg_exec_us,10343,10206,1.00
+max_rss_kb,103500,103768,0
+page_faults,42832,41692,2.00
+context_switches,528,609,15.00
