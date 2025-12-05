@@ -32,13 +32,13 @@ for metric in plot_metrics:
     fork_val = means[metric]['fork_shell']
     spork_val = means[metric]['spork_shell']
     
-    bars = ax.bar(['fork_shell', 'spork_shell'], [fork_val, spork_val])
+    bars = ax.bar(['fork_shell', 'spork_shell'], [fork_val, spork_val], color=['blue', 'orange'])
     
-    # Add data labels on bars
+    # Add data labels on bars with thousand separators
     for bar in bars:
         height = bar.get_height()
         ax.text(bar.get_x() + bar.get_width()/2., height,
-                f'{height:.0f}',
+                f'{height:,.0f}',
                 ha='center', va='bottom')
     
     ax.set_ylabel(metric)
