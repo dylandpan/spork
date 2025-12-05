@@ -1,3 +1,5 @@
+import matplotlib
+matplotlib.use('Agg')
 import csv
 import matplotlib.pyplot as plt
 
@@ -21,37 +23,29 @@ for metric, values in metrics.items():
         'spork_shell': sum(values['spork_shell']) / len(values['spork_shell'])
     }
 
-# Time metrics chart
-time_metrics = ['total_time_us', 'exec_time_us', 'avg_exec_us']
-fig, ax = plt.subplots()
-x = range(len(time_metrics))
-width = 0.35
-fork_vals = [means[m]['fork_shell'] for m in time_metrics]
-spork_vals = [means[m]['spork_shell'] for m in time_metrics]
-ax.bar([i - width/2 for i in x], fork_vals, width, label='fork_shell')
-ax.bar([i + width/2 for i in x], spork_vals, width, label='spork_shell')
-ax.set_xticks(x)
-ax.set_xticklabels(time_metrics)
-ax.set_ylabel('Microseconds')
-ax.set_title('Time Metrics Comparison')
-ax.legend()
-plt.savefig('time_comparison.png')
-plt.close()
+# Metrics to plot (excluding total_runs)
+plot_metrics = ['total_time_us', 'exec_time_us', 'avg_exec_us', 'max_rss_kb', 'page_faults', 'context_switches']
 
-# Memory metrics chart
-memory_metrics = ['max_rss_kb', 'page_faults', 'context_switches']
-fig, ax = plt.subplots()
-x = range(len(memory_metrics))
-fork_vals = [means[m]['fork_shell'] for m in memory_metrics]
-spork_vals = [means[m]['spork_shell'] for m in memory_metrics]
-ax.bar([i - width/2 for i in x], fork_vals, width, label='fork_shell')
-ax.bar([i + width/2 for i in x], spork_vals, width, label='spork_shell')
-ax.set_xticks(x)
-ax.set_xticklabels(memory_metrics)
-ax.set_ylabel('Count / KB')
-ax.set_title('Memory Metrics Comparison')
-ax.legend()
-plt.savefig('memory_comparison.png')
-plt.close()
+for metric in plot_metrics:
+    fig, ax = plt.subplots()
+    
+    fork_val = means[metric]['fork_shell']
+    spork_val = means[metric]['spork_shell']
+    
+    bars = ax.bar(['fork_shell', 'spork_shell'], [fork_val, spork_val])
+    
+    # Add data labels on bars
+    for bar in bars:
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height,
+                f'{height:.0f}',
+                ha='center', va='bottom')
+    
+    ax.set_ylabel(metric)
+    ax.set_title(f'{metric} Comparison')
+    
+    plt.tight_layout()
+    plt.savefig(f'{metric}_comparison.png')
+    plt.close()
 
-print("Saved time_comparison.png and memory_comparison.png")
+print("Saved 6 comparison charts")
